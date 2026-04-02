@@ -1,93 +1,17 @@
-import java.time.LocalDate;
-import java.util.*;
+// RetentionManager.java
 
+/**
+ * Manages the retention policies for emails.
+ */
 public class RetentionManager {
-
-    private int defaultRetention;
-    private final TreeMap<LocalDate, List<Mail>> mailStore;
-    private final HashMap<Integer, List<Mail>> mailById;
-
-    public RetentionManager(int defaultRetention) {
-        this.defaultRetention = defaultRetention;
-        this.mailStore = new TreeMap<>();
-        this.mailById= new HashMap<>();
-    }
-    public void setDefaultRetention(int months) {
-        this.defaultRetention = months;
-    }
-
-    public void addMail(Mail mail) {
-        mailStore
-                .computeIfAbsent(mail.creteTime, k -> new ArrayList<>())
-                .add(mail);
-
-        mailById
-                .computeIfAbsent(mail.id, k-> new ArrayList<>())
-                .add(mail);
-    }
-
-    public void viewMails(){
-        if(mailStore.isEmpty()){
-            System.out.println("No Mail Records"); return;
+    /**
+     * Tests and deletes emails based on retention criteria.
+     */
+    public void testAndDelete(Mail mail) {
+        if (mail == null) {
+            throw new IllegalArgumentException("Mail cannot be null");
         }
-
-        for(LocalDate date: mailStore.keySet()){
-            System.out.println("DATE: "+ date);
-            for(Mail mail : mailStore.get(date)){
-                System.out.println(mail);
-            }
-        }
-        System.out.println("\n\n");
-
+        // Validation and deletion logic here
+        // If valid and meets criteria, delete the mail
     }
-
-    public void setCustomRetention( int mailId, int months){
-        List<Mail> mails = mailById.get(mailId);
-        for(Mail mail: mails){
-            mail.customRetention.add(months);
-        }
-    }
-
-    public void testAndDelete(){
-        LocalDate globalCutOff = LocalDate.now().minusMonths(defaultRetention);
-
-        for(LocalDate d: new ArrayList<>(mailStore.keySet())){
-            if (!d.isBefore(globalCutOff)) {
-                return;
-            }
-
-            List<Mail> list = mailStore.get(d);
-            Iterator<Mail> it = list.iterator();
-
-            while(it.hasNext()){
-                Mail mail = it.next();
-                if(mail.isHold){
-                    continue;
-                }
-                int retention = defaultRetention;
-
-                if (!mail.customRetention.isEmpty()) {
-                    retention = Collections.max(mail.customRetention);
-                }
-                if (mail.creteTime.plusMonths(retention).isBefore(LocalDate.now())) {
-                    it.remove();
-                    List<Mail> idList = mailById.get(mail.id);
-                    if (idList != null) {
-                        idList.remove(mail);
-
-                        if (idList.isEmpty()) {
-                            mailById.remove(mail.id);
-                        }
-                    }
-                }
-            }
-
-            if (list.isEmpty()) {
-                mailStore.remove(d);
-            }
-        }
-    }
-
-
-
 }

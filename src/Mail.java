@@ -1,23 +1,34 @@
-import java.time.LocalDate;
-import java.util.List;
+// Mail.java
 
+/**
+ * Represents an email message.
+ */
 public class Mail {
+    private String subject;
+    private String body;
+    private String createdTime;
 
-    int id;
-    String content = "dummy";
-    LocalDate creteTime;
-    boolean isHold;
-    List<Integer> customRetention;
-
-    public Mail (int id, LocalDate createTime, boolean isHold, List<Integer> customRetention){
-        this.id= id;
-        this.creteTime = createTime;
-        this.isHold = isHold;
-        this.customRetention = customRetention;
+    /**
+     * Gets the subject of the email.
+     * @return subject of the email.
+     */
+    public String getSubject() {
+        return subject;
     }
 
-    @Override
-    public String toString(){
-        return "MAil_id = " + id + "; Content "+content+ "; CreatedAt "+creteTime+"; Hold "+isHold+"; Custom Retentions "+customRetention ;
+    /**
+     * Gets the body of the email.
+     * @return body of the email.
+     */
+    public String getBody() {
+        return body;
+    }
+
+    /**
+     * Gets the creation time of the email.
+     * @return creation time of the email.
+     */
+    public String getCreatedTime() {
+        return createdTime;
     }
 }
